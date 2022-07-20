@@ -1,9 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.abdp_map_google">
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
-    <application
+   <application
         android:label="abdp_map_google"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
@@ -35,6 +32,6 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBkpl3r7oRmdHRqWp0HkAgGgLjRFzVpjLA" />
+            android:value="AIzaSyBkpl3r7oRmdHRqWp0HkAgGgLjRFzVpjLA" /> <!-- ABDP -->
     </application>
 </manifest>
