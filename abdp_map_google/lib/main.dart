@@ -29,8 +29,9 @@ class MapSample extends StatefulWidget {
 class MapSampleState extends State<MapSample> {
   final Completer<GoogleMapController> _controller = Completer();
   final List<Marker> _lstMarker = [];
-  final List<Circle> _lstCircle = [];
-  final List<LatLng> _points = [];
+  // final List<Circle> _lstCircle = [];
+  final List<LatLng> _lstLatLng = [];
+  final List<Polyline> _lstPolyline = [];
   Uint8List? markerIcon;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -69,49 +70,48 @@ class MapSampleState extends State<MapSample> {
   //   center: LatLng(-6.360980580587045, 106.74806032068038),
   // );
 
-  static final Polyline _polyline = Polyline(
-    polylineId: PolylineId("Polyline 1"),
-    points: const [
-      LatLng(-6.360980580587045, 106.74806032068038), // WATES - ABDP
-      LatLng(-6.360980580587045, 106.77), // ABDP
-    ],
-    color: Colors.red,
-    width: 5,
-  );
+  // static final Polyline _polyline = Polyline(
+  //   polylineId: PolylineId("Polyline 1"),
+  //   points: const [
+  //     LatLng(-6.360980580587045, 106.74806032068038), // WATES - ABDP
+  //     LatLng(-6.360980580587045, 106.77), // ABDP
+  //   ],
+  //   color: Colors.red,
+  //   width: 5,
+  // );
 
-  static final Polygon _polygon = Polygon(
-    polygonId: PolygonId("Polygon 1"),
-    points: const [
-      LatLng(-6.175268555139486, 106.82713374020734), // MONAS - ABDP
-      LatLng(-6.175268555139486, 106.82713374020734 + 0.03),
-      LatLng(-6.175268555139486 + 0.03, 106.82713374020734 + 0.03),
-      LatLng(-6.175268555139486 + 0.03, 106.82713374020734),
-    ],
-    strokeColor: Colors.blue,
-    strokeWidth: 2,
-    fillColor: Colors.red.withOpacity(0.2),
-  );
+  // static final Polygon _polygon = Polygon(
+  //   polygonId: PolygonId("Polygon 1"),
+  //   points: const [
+  //     LatLng(-6.175268555139486, 106.82713374020734), // MONAS - ABDP
+  //     LatLng(-6.175268555139486, 106.82713374020734 + 0.03),
+  //     LatLng(-6.175268555139486 + 0.03, 106.82713374020734 + 0.03),
+  //     LatLng(-6.175268555139486 + 0.03, 106.82713374020734),
+  //   ],
+  //   strokeColor: Colors.blue,
+  //   strokeWidth: 2,
+  //   fillColor: Colors.red.withOpacity(0.2),
+  // );
 
-  Future<Uint8List> getMarkerIcon(String image, int size) async {
-    ByteData bytData = await rootBundle.load(image);
-    ui.Codec codec = await ui.instantiateImageCodec(
-        bytData.buffer.asUint8List(),
-        targetHeight: size);
-    ui.FrameInfo info = await codec.getNextFrame();
-
-    return (await info.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
-  }
+  // Future<Uint8List> getMarkerIcon(String image, int size) async {
+  //   ByteData bytData = await rootBundle.load(image);
+  //   ui.Codec codec = await ui.instantiateImageCodec(
+  //       bytData.buffer.asUint8List(),
+  //       targetHeight: size);
+  //   ui.FrameInfo info = await codec.getNextFrame();
+  //   return (await info.image.toByteData(format: ui.ImageByteFormat.png))!
+  //       .buffer
+  //       .asUint8List();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    Polyline _polylines = Polyline(
-      polylineId: PolylineId("Polyline 1"),
-      points: _points,
-      color: Colors.red,
-      width: 5,
-    );
+    // Polyline _polylines = Polyline(
+    //   polylineId: PolylineId("Polyline 1"),
+    //   points: _points,
+    //   color: Colors.red,
+    //   width: 5,
+    // );
 
     return Scaffold(
       // Call GoogleMap() for rendering Google Map screen // ABDP
@@ -119,9 +119,10 @@ class MapSampleState extends State<MapSample> {
         // markers: {_marker},
         markers: Set<Marker>.from(_lstMarker), // ABDP
         // circles: {_circle},
-        circles: Set<Circle>.from(_lstCircle), // ABDP
+        // circles: Set<Circle>.from(_lstCircle), // ABDP
         // polylines: {_polyline},
-        polylines: {_polylines},
+        // polylines: {_polylines},
+        polylines: Set<Polyline>.from(_lstPolyline),
         // polygons: {_polygon},
         mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex,
@@ -159,7 +160,7 @@ class MapSampleState extends State<MapSample> {
           // final Uint8List newIcon =
           //     await getMarkerIcon('assets/images/map-marker-outline-24.png', 10);
 
-          _points.add(LatLng(position.latitude, position.longitude));
+          _lstLatLng.add(LatLng(position.latitude, position.longitude));
 
           _lstMarker.add(Marker(
             // icon: BitmapDescriptor.fromBytes(newIcon),
@@ -181,12 +182,22 @@ class MapSampleState extends State<MapSample> {
           //   center: LatLng(position.latitude, position.longitude),
           // ));
 
+          _lstPolyline.add(Polyline(
+            polylineId: PolylineId("Polyline ${_lstPolyline.length}"),
+            points: _lstLatLng,
+            color: Colors.red,
+            width: 5,
+          ));
+
           setState(() {});
         },
       ),
+
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
+        // onPressed: _goToTheLake,
+        // label: const Text('To the lake!'),
+        onPressed: closePolyline,
+        label: const Text('Close Line'),
         icon: const Icon(Icons.directions_boat),
       ),
     );
@@ -196,5 +207,19 @@ class MapSampleState extends State<MapSample> {
     final GoogleMapController controller = await _controller.future;
 
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  }
+
+  Future<void> closePolyline() async {
+    _lstLatLng.add(LatLng(_lstLatLng[0].latitude, _lstLatLng[0].longitude));
+
+    _lstPolyline.add(Polyline(
+      // polylineId: PolylineId("Polyline ${_lstPolyline.length}"),
+      polylineId: PolylineId("Polyline ${_lstPolyline.length + 1}"),
+      points: _lstLatLng,
+      color: Colors.red,
+      width: 5,
+    ));
+
+    setState(() {});
   }
 }
