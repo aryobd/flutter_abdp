@@ -80,18 +80,15 @@ class MapSampleState extends State<MapSample> {
   //   width: 5,
   // );
 
-  // static final Polygon _polygon = Polygon(
-  //   polygonId: PolygonId("Polygon 1"),
-  //   points: const [
-  //     LatLng(-6.175268555139486, 106.82713374020734), // MONAS - ABDP
-  //     LatLng(-6.175268555139486, 106.82713374020734 + 0.03),
-  //     LatLng(-6.175268555139486 + 0.03, 106.82713374020734 + 0.03),
-  //     LatLng(-6.175268555139486 + 0.03, 106.82713374020734),
-  //   ],
-  //   strokeColor: Colors.blue,
-  //   strokeWidth: 2,
-  //   fillColor: Colors.red.withOpacity(0.2),
-  // );
+  Polygon _polygon = Polygon(
+    polygonId: const PolygonId("Polygon 1"),
+    points: const [
+      LatLng(0, 0),
+    ],
+    strokeColor: Colors.blue,
+    strokeWidth: 2,
+    fillColor: Colors.red.withOpacity(0.2),
+  );
 
   // Future<Uint8List> getMarkerIcon(String image, int size) async {
   //   ByteData bytData = await rootBundle.load(image);
@@ -123,7 +120,7 @@ class MapSampleState extends State<MapSample> {
         // polylines: {_polyline},
         // polylines: {_polylines},
         polylines: Set<Polyline>.from(_lstPolyline),
-        // polygons: {_polygon},
+        polygons: {_polygon},
         mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
@@ -219,6 +216,14 @@ class MapSampleState extends State<MapSample> {
       color: Colors.red,
       width: 5,
     ));
+
+    _polygon = Polygon(
+      polygonId: const PolygonId("Polygon 1"),
+      points: _lstLatLng,
+      strokeColor: Colors.blue,
+      strokeWidth: 2,
+      fillColor: Colors.red.withOpacity(0.2),
+    );
 
     setState(() {});
   }
